@@ -32,6 +32,8 @@ app.post("/sign-up", (request, response)=>{
 
 app.post("/tweets", (request, response)=>{
     const tweet = request.body;
+    tweet.avatar = users.find((value)=> value.username === tweet.username).avatar;
+    console.log(tweet);
     tweets.unshift(tweet);
     response.send("OK");
 });
