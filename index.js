@@ -24,9 +24,20 @@ app.get("/tweets", (request, response) => {
     response.send(lastTweets);  
 });
 
+app.get ("/tweets/:name", (request, response)=>{
+    const name = request.params.name;
+    const allTweets = tweets.filter((value)=> value.username === name);
+    if(allTweets.length > 0){
+        response.status(201).send(allTweets);
+    }else{
+        response.status(400).send("Usuario não possui tweets publicados");
+    }
+
+});
+
 app.post("/sign-up", (request, response)=>{
     const user = request.body;
-    if(user.username.length>3 && /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png).{0,10000}/.test(user.avatar) ){
+    if(user.username.length>3 && /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png).{0,20000}/.test(user.avatar) ){
         users.push(user);
         response.status(201).send("OK");
     }else{
