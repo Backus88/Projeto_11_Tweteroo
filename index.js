@@ -26,16 +26,24 @@ app.get("/tweets", (request, response) => {
 
 app.post("/sign-up", (request, response)=>{
     const user = request.body;
-    users.push(user);
-    response.send("OK");
+    if(user.username.length>3 && /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png).{0,10000}/.test(user.avatar) ){
+        users.push(user);
+        response.status(201).send("OK");
+    }else{
+        response.status(400).send("Todos os campos são obrigatórios!");
+    }
 });
 
 app.post("/tweets", (request, response)=>{
     const tweet = request.body;
-    tweet.avatar = users.find((value)=> value.username === tweet.username).avatar;
-    console.log(tweet);
-    tweets.unshift(tweet);
-    response.send("OK");
+    if(users.some((value)=> value.username ===  tweet.username) && (tweet.tweet.length > 10 && tweet.tweet.length < 300)){
+        tweet.avatar = users.find((value)=> value.username === tweet.username).avatar;
+        tweets.unshift(tweet);
+        response.status(201).send("OK");
+    }else{
+        response.status(400).send("Todos os campos são obrigatórios!");
+    }
+    
 });
 
 app.listen(5000);
